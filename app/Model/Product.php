@@ -25,7 +25,7 @@ class Product extends Model
 
     public function scopeActive($query)
     {
-        return true;
+        return $query->whereNotNull('status');
     }
 
     public function reviews()
