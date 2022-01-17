@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\CentralLogics\Helpers;
 use App\CentralLogics\OrderLogic;
+use App\Events\ChangeStatusEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\V1\PayMobController;
 use App\Model\BusinessSetting;
@@ -52,7 +53,7 @@ class OrderController extends Controller
         foreach ($request['cart'] as $c) {
             $product = Product::find($c['product_id']);
             $openTime  = date('Y-m-d H:i:s',strtotime($product->available_time_starts.'-1 day'));
-            $closeTime = date('Y-m-d H:i:s',strtotime($product->available_time_ends.'+1 day'));  
+            $closeTime = date('Y-m-d H:i:s',strtotime($product->available_time_ends.'+1 day'));
             if(!Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s'))){
                 return response()->json(['errors' => [['code' => 'availablety', 'message' => 'بعض او أحد المنتجات ليس متاح الأن']]], 403);
             }
@@ -134,6 +135,9 @@ class OrderController extends Controller
             } catch (\Exception $e) {
 
             }
+
+            $order=Order::where('id',$or_d->id)->first();
+            event(new ChangeStatusEvent($order))->dilay('5');
 
             return response()->json([
                 'message' => trans('custom.order_success'),
