@@ -39,7 +39,7 @@ class Pending extends Command
      */
     public function handle()
     {
-        $order= Order::where('order_status','pending')->where('created_at', '>=', Carbon::now()->subMinute(5))->update([
+        $order= Order::where('order_status','pending')->where('created_at', '<=', Carbon::now()->subMinute(1))->update([
             'order_status'=>'confirmed'
         ]);
     }

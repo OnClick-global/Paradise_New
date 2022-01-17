@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('Pending:change')->everyMinute();
+        $schedule->command('processing:change')->everyMinute();
         $schedule->command('Delivery:change')->everyMinute();
     }
 

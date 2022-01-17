@@ -6,21 +6,21 @@ use App\Model\Order;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class Delivery extends Command
+class Processing extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'Delivery:change';
+    protected $signature = 'processing:change';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Delivery:change';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -35,12 +35,12 @@ class Delivery extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int
      */
     public function handle()
     {
-        $order= Order::where('order_status','processing')->where('updated_at', '<=', Carbon::now()->subMinute(1))->update([
-            'order_status'=>'out_for_delivery'
+        $order= Order::where('order_status','confirmed')->where('updated_at','<=', Carbon::now()->subMinute(1))->update([
+            'order_status'=>'processing'
         ]);
     }
 }
