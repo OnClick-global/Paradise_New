@@ -91,7 +91,7 @@ class Helpers
                 $openTime  = date('Y-m-d H:i:s',strtotime($item['available_time_starts'].'-1 day'));
                 $closeTime = date('Y-m-d H:i:s',strtotime($item['available_time_ends'].'+1 day'));                
                 $variations = [];
-                $item['is_open'] = Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s'));
+                $item['is_open'] = Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s')) && ($item['status'] == 1)?true:false;
                 $item['category_ids'] = json_decode($item['category_ids']);
                 $item['attributes'] = json_decode($item['attributes']);
                 $item['choice_options'] = json_decode($item['choice_options']);
@@ -129,7 +129,7 @@ class Helpers
             $openTime  = date('Y-m-d H:i:s',strtotime($data['available_time_starts'].'-1 day'));
             $closeTime = date('Y-m-d H:i:s',strtotime($data['available_time_ends'].'+1 day'));              
             $variations = [];
-            $data['is_open'] = Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s'));
+                $item['is_open'] = Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s')) && ($item['status'] == 1)?true:false;
             $data['category_ids'] = json_decode($data['category_ids']);
             $data['attributes'] = json_decode($data['attributes']);
             $data['choice_options'] = json_decode($data['choice_options']);
