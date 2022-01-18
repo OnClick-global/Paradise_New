@@ -73,7 +73,6 @@
                 <b>  {{$detail->product['name']}} </b>
             </div>
         </div>
-        <hr>
 	@endif
 @endforeach    	
         <script type="text/javascript">
