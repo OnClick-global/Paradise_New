@@ -25,6 +25,8 @@ Route::group(['namespace' => 'Branch', 'as' => 'branch.' ,'middleware'=>'lang'],
             Route::get('payment-status', 'OrderController@payment_status')->name('payment-status');
             Route::post('productStatus', 'OrderController@productStatus')->name('productStatus');
             Route::get('generate-invoice/{id}', 'OrderController@generate_invoice')->name('generate-invoice');
+            Route::get('generate-kot/{id}', 'OrderController@generate_kot')->name('generate-kot');
+            Route::get('generate-sticker/{id}', 'OrderController@generate_sticker')->name('generate-sticker');            
             Route::post('add-payment-ref-code/{id}', 'OrderController@add_payment_ref_code')->name('add-payment-ref-code');
         });
 

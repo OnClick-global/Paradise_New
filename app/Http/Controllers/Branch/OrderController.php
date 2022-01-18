@@ -8,6 +8,19 @@ use App\Model\Order;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\CapabilityProfile;
+use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\CupsPrintConnector;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\PrintBuffers\ImagePrintBuffer;
+use Mike42\Escpos\ImagickEscposImage;
+use \ArPHP\I18N\Arabic;
+use PDF;
+
 
 class OrderController extends Controller
 {
@@ -172,10 +185,81 @@ class OrderController extends Controller
 
     public function generate_invoice($id)
     {
-        $order = Order::where(['id' => $id, 'branch_id' => auth('branch')->id()])->first();
-        return view('branch-views.order.invoice', compact('order'));
+        $order = Order::where('id', $id)->first();
+        return view('admin-views.order.invoice', ['order'=>$order]);
+        $addonsCount = 0;
+        foreach ($order->details as $key => $detail) {
+            $addonsCount += count(json_decode($detail['add_on_ids'],true));
+        }
+        return $html;
+        // return $pdf->download('invoice.pdf');
+        $mpdf = new \Mpdf\Mpdf([           
+            'format' => [80, 50+((count($order->details)+$addonsCount)+20)],
+            'default_font' => 'taj',
+        ]);
+        $mpdf->SetDirectionality('rtl');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        return ;   
+        $mpdf->Output(public_path('pdf/invoice.pdf', 'F'));   
+        $pdf = public_path('pdf/invoice.pdf');
+        $connector = new WindowsPrintConnector("XP-80C");
+        $profile = CapabilityProfile::load("default");
+        $printer = new Printer($connector,$profile);
+        try {
+            $pages = ImagickEscposImage::loadPdf($pdf);
+            foreach ($pages as $page) {
+                $printer->bitImage($page);
+            }
+            $printer -> cut();
+        } catch (Exception $e) {
+            echo $e -> getMessage() . "\n";
+        } finally {
+            $printer -> close();
+        }
+        return back();            
     }
-
+    public function generate_kot($id)
+    {
+        $order = Order::where('id', $id)->first();
+        return view('admin-views.order.invoice-kot', ['order'=>$order]);
+        $addonsCount = 0;
+        foreach ($order->details as $key => $detail) {
+            $addonsCount += count(json_decode($detail['add_on_ids'],true));
+        }
+        return $html;
+        $mpdf = new \Mpdf\Mpdf([           
+            'format' => [80, 50+((count($order->details)+$addonsCount)+20)],
+            'default_font' => 'taj',
+        ]);
+        $mpdf->SetDirectionality('rtl');
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        return ;   
+        $mpdf->Output(public_path('pdf/invoice.pdf', 'F'));   
+        $pdf = public_path('pdf/invoice.pdf');
+        $connector = new WindowsPrintConnector("XP-80C");
+        $profile = CapabilityProfile::load("default");
+        // return $pdf->download('invoice.pdf');
+        $printer = new Printer($connector,$profile);
+        try {
+            $pages = ImagickEscposImage::loadPdf($pdf);
+            foreach ($pages as $page) {
+                $printer->bitImage($page);
+            }
+            $printer -> cut();
+        } catch (Exception $e) {
+            echo $e -> getMessage() . "\n";
+        } finally {
+            $printer -> close();
+        }
+        return back();            
+    }
+    public function generate_sticker($id)
+    {
+        $order   = Order::where('id', $id)->first();
+        return view('admin-views.order.sticker', ['order'=>$order]);          
+    }
     public function add_payment_ref_code(Request $request, $id)
     {
         Order::where(['id' => $id, 'branch_id' => auth('branch')->id()])->update([
