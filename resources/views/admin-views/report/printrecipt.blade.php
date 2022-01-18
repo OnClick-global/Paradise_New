@@ -233,6 +233,10 @@
                         <td class='right'>{{round(array_sum($orderTypeCount['coupon_discount_amount']))." ".\App\CentralLogics\Helpers::currency_symbol()}}</td>
                     </tr>
                     <tr>
+                        <td class='w-50'>إجمالى ألمرتجعات </td>
+                        <td class='right'>{{round(array_sum($orderStatusCount['returned']))." ".\App\CentralLogics\Helpers::currency_symbol()}}</td>
+                    </tr>
+                    <tr>
                         <td class='w-50'>الإجمالى</td>
                         <td class='right'>{{round(array_sum($orderTypeCount['delivery'])+array_sum($orderTypeCount['take_away']))." ".\App\CentralLogics\Helpers::currency_symbol()}}</td>
                     </tr>

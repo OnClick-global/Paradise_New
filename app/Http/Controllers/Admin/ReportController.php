@@ -55,12 +55,17 @@ class ReportController extends Controller
         $categories = Category::where('position', 0)->get();
         $newArr = [];
         $orderTypeCount = [];
+        $orderStatusCount = [];
         $orderTypeCount['delivery'] = [];
         $orderTypeCount['take_away'] = [];
+        $orderStatusCount['returned'] = [];
         $productsCount   = 0;
         $delivery_charge = 0;
         foreach ($orders as $order) {
             $delivery_charge += $order->delivery_charge;
+            if ($order->order_status == 'returned') {
+                $orderStatusCount['returned'][] = $order->order_amount;
+            }
             // dd($order);
             $orderTypeCount[$order->order_type][] = $order->order_amount;
             $orderTypeCount['coupon_discount_amount'][] = $order->coupon_discount_amount;
@@ -73,7 +78,7 @@ class ReportController extends Controller
         if(count($orders) == 0){
             return back();
         }
-        return view('admin-views.report.printrecipt', compact('newArr','orders','from','to','orderTypeCount','productsCount','delivery_charge'));
+        return view('admin-views.report.printrecipt', compact('newArr','orders','from','to','orderTypeCount','orderStatusCount','productsCount','delivery_charge'));
         return $html;
     }
 
