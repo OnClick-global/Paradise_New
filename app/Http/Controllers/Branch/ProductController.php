@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Branch;
 
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
