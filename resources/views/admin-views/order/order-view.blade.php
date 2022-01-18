@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="mt-2">
-                        @if($order['order_status'] != 'Returned')
+                        @if($order['order_status'] != 'returned')
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
                            href={{route('admin.orders.generate-invoice',[$order['id']])}}>
                             <i class="tio-print mr-1"></i> {{\App\CentralLogics\translate('print invoice')}}
