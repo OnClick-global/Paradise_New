@@ -46,7 +46,7 @@ class ProductController extends Controller
         }
         $combinations = $result;
         return response()->json([
-            'view' => view('admin-views.product.partials._variant-combinations', compact('combinations', 'price', 'product_name'))->render(),
+            'view' => view('branch-views.product.partials._variant-combinations', compact('combinations', 'price', 'product_name'))->render(),
         ]);
     }
 
@@ -69,7 +69,7 @@ class ProductController extends Controller
     public function index()
     {
         $categories = Category::where(['position' => 0])->get();
-        return view('admin-views.product.index', compact('categories'));
+        return view('branch-views.product.index', compact('categories'));
     }
 
     public function list(Request $request)
@@ -89,7 +89,7 @@ class ProductController extends Controller
             $query = Product::latest();
         }
         $products = $query->paginate(Helpers::getPagination())->appends($query_param);
-        return view('admin-views.product.list', compact('products', 'search'));
+        return view('branch-views.product.list', compact('products', 'search'));
     }
 
     public function search(Request $request)
@@ -101,7 +101,7 @@ class ProductController extends Controller
             }
         })->get();
         return response()->json([
-            'view' => view('admin-views.product.partials._table', compact('products'))->render()
+            'view' => view('branch-views.product.partials._table', compact('products'))->render()
         ]);
     }
 
@@ -109,7 +109,7 @@ class ProductController extends Controller
     {
         $product = Product::where(['id' => $id])->first();
         $reviews = Review::where(['product_id' => $id])->latest()->paginate(20);
-        return view('admin-views.product.view', compact('product', 'reviews'));
+        return view('branch-views.product.view', compact('product', 'reviews'));
     }
 
     public function store(Request $request)
@@ -269,7 +269,7 @@ class ProductController extends Controller
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
         $product_category = json_decode($product->category_ids);
         $categories = Category::where(['parent_id' => 0])->get();
-        return view('admin-views.product.edit', compact('product', 'product_category', 'categories'));
+        return view('branch-views.product.edit', compact('product', 'product_category', 'categories'));
     }
 
     public function status(Request $request)
@@ -428,7 +428,7 @@ class ProductController extends Controller
 
     public function bulk_import_index()
     {
-        return view('admin-views.product.bulk-import');
+        return view('branch-views.product.bulk-import');
     }
 
     public function bulk_import_data(Request $request)
