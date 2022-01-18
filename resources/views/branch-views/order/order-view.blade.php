@@ -16,12 +16,12 @@
                         <ol class="breadcrumb breadcrumb-no-gutter">
                             <li class="breadcrumb-item">
                                 <a class="breadcrumb-link"
-                                   href="{{route('admin.orders.list',['status'=>'all'])}}">
-                                    Orders
+                                   href="{{route('branch.orders.list',['status'=>'all'])}}">
+                                    {{\App\CentralLogics\translate('orders')}}
                                 </a>
                             </li>
                             <li class="breadcrumb-item active"
-                                aria-current="page">{{\App\CentralLogics\translate('order details')}}</li>
+                                aria-current="page">{{\App\CentralLogics\translate('order')}}   {{\App\CentralLogics\translate('details')}}</li>
                         </ol>
                     </nav>
 
@@ -66,6 +66,7 @@
                         <span class="ml-2 ml-sm-3">
                            <i class="tio-date-range"></i> {{date('d M Y H:i:s',strtotime($order['created_at']))}}
                         </span>
+
                         <span class="ml-2 ml-sm-3 badge badge-soft-success">
                            <i class="tio-time"></i> {{\App\CentralLogics\translate('scheduled')}} : {{date('d-M-Y',strtotime($order['delivery_date']))}} {{$order['delivery_time']}}
                         </span>
@@ -74,36 +75,36 @@
                     <div class="mt-2">
                         @if($order['order_status'] != 'returned')
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
-                           href={{route('admin.orders.generate-invoice',[$order['id']])}}>
+                           href={{route('branch.orders.generate-invoice',[$order['id']])}}>
                             <i class="tio-print mr-1"></i> {{\App\CentralLogics\translate('print invoice')}}
                         </a>
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
-                           href={{route('admin.orders.generate-kot',[$order['id']])}}>
+                           href={{route('branch.orders.generate-kot',[$order['id']])}}>
                             <i class="tio-print mr-1"></i> طباعة مطبخ
                         </a>
 
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
-                           href={{route('admin.orders.generate-sticker',[$order['id']])}}>
+                           href={{route('branch.orders.generate-sticker',[$order['id']])}}>
                             <i class="tio-barcode mr-1"></i> طباعة استيكر
                         </a>
                         @elseif($order['order_status'] == 'returned')
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
-                           href={{route('admin.orders.generate-invoice',[$order['id']])}}>
+                           href={{route('branch.orders.generate-invoice',[$order['id']])}}>
                             <i class="tio-print mr-1"></i> طباعة مرتجع
                         </a>
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
-                           href={{route('admin.orders.generate-kot',[$order['id']])}}>
+                           href={{route('branch.orders.generate-kot',[$order['id']])}}>
                             <i class="tio-print mr-1"></i> طباعة مطبخ مرتجع
                         </a>                       
                         @endif
+
                         <!-- Unfold -->
                         @if($order['order_type']!='take_away')
                             <div class="hs-unfold">
                                 <select class="form-control" name="delivery_man_id"
                                         onchange="addDeliveryMan(this.value)">
-                                    <option
-                                        value="0">{{\App\CentralLogics\translate('select')}} {{\App\CentralLogics\translate('deliveryman')}}</option>
-                                    @foreach(\App\Model\DeliveryMan::all() as $deliveryMan)
+                                    <option value="0">Select Delivery Man</option>
+                                    @foreach(\App\Model\DeliveryMan::where(['branch_id'=>auth('branch')->id()])->orWhere(['branch_id'=>0])->get() as $deliveryMan)
                                         <option
                                             value="{{$deliveryMan['id']}}" {{$order['delivery_man_id']==$deliveryMan['id']?'selected':''}}>
                                             {{$deliveryMan['f_name'].' '.$deliveryMan['l_name']}}
@@ -142,14 +143,6 @@
                             </div>
                         @endif
 
-                        <div class="hs-unfold ml-1">
-                            <h5 class="text-capitalize">
-                                <i class="tio-shop"></i>
-                                {{\App\CentralLogics\translate('branch')}} : <label
-                                    class="badge badge-secondary">{{$order->branch?$order->branch->name:'Branch deleted!'}}</label>
-                            </h5>
-                        </div>
-
                         <div class="hs-unfold float-right">
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
@@ -157,27 +150,27 @@
                                         aria-expanded="false">
                                     {{\App\CentralLogics\translate('status')}}
                                 </button>
-                                <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'pending'])}}','Change status to pending ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'pending'])}}','Change status to pending ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('pending')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'confirmed'])}}','Change status to confirmed ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'confirmed'])}}','Change status to confirmed ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('confirmed')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'processing'])}}','Change status to processing ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'processing'])}}','Change status to processing ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('processing')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'out_for_delivery'])}}','Change status to out for delivery ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'out_for_delivery'])}}','Change status to out for delivery ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('out_for_delivery')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'delivered'])}}','Change status to delivered ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'delivered'])}}','Change status to delivered ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('delivered')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'returned'])}}','Change status to returned ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'returned'])}}','Change status to returned ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('returned')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.status',['id'=>$order['id'],'order_status'=>'failed'])}}','Change status to failed ?')"
+                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'failed'])}}','Change status to failed ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('failed')}}</a>
                                 </div>
                             </div>
@@ -191,10 +184,10 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.payment-status',['id'=>$order['id'],'payment_status'=>'paid'])}}','Change status to paid ?')"
+                                       onclick="route_alert('{{route('branch.orders.payment-status',['id'=>$order['id'],'payment_status'=>'paid'])}}','Change status to paid ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('paid')}}</a>
                                     <a class="dropdown-item"
-                                       onclick="route_alert('{{route('admin.orders.payment-status',['id'=>$order['id'],'payment_status'=>'unpaid'])}}','Change status to unpaid ?')"
+                                       onclick="route_alert('{{route('branch.orders.payment-status',['id'=>$order['id'],'payment_status'=>'unpaid'])}}','Change status to unpaid ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('unpaid')}}</a>
                                 </div>
                             </div>
@@ -205,12 +198,12 @@
 
                 <div class="col-sm-auto">
                     <a class="btn btn-icon btn-sm btn-ghost-secondary rounded-circle mr-1"
-                       href="{{route('admin.orders.details',[$order['id']-1])}}"
+                       href="{{route('branch.orders.details',[$order['id']-1])}}"
                        data-toggle="tooltip" data-placement="top" title="Previous order">
                         <i class="tio-arrow-backward"></i>
                     </a>
                     <a class="btn btn-icon btn-sm btn-ghost-secondary rounded-circle"
-                       href="{{route('admin.orders.details',[$order['id']+1])}}" data-toggle="tooltip"
+                       href="{{route('branch.orders.details',[$order['id']+1])}}" data-toggle="tooltip"
                        data-placement="top" title="Next order">
                         <i class="tio-arrow-forward"></i>
                     </a>
@@ -228,37 +221,33 @@
                         <div class="row">
                             <div class="col-12 pb-2 border-bottom">
                                 <h4 class="card-header-title">
-                                    {{\App\CentralLogics\translate('order details')}}
+                                    {{\App\CentralLogics\translate('order')}} {{\App\CentralLogics\translate('details')}}
                                     <span
                                         class="badge badge-soft-dark rounded-circle ml-1">{{$order->details->count()}}</span>
                                 </h4>
                             </div>
                             <div class="col-6 pt-2">
                                 <h6 style="color: #8a8a8a;">
-                                    {{\App\CentralLogics\translate('order note')}} : {{$order['order_note']}}
+                                    {{\App\CentralLogics\translate('order')}} {{\App\CentralLogics\translate('note')}} : {{$order['order_note']}}
                                 </h6>
                             </div>
                             <div class="col-6 pt-2">
                                 <div class="text-right">
                                     <h6 class="text-capitalize" style="color: #8a8a8a;">
-                                        {{\App\CentralLogics\translate('payment method')}}
-                                        : {{str_replace('_',' ',$order['payment_method'])}}
+                                        {{\App\CentralLogics\translate('payment')}} {{\App\CentralLogics\translate('method')}} : {{str_replace('_',' ',$order['payment_method'])}}
                                     </h6>
                                     <h6 class="" style="color: #8a8a8a;">
                                         @if($order['transaction_reference']==null)
-                                            {{\App\CentralLogics\translate('reference')}} {{\App\CentralLogics\translate('code')}}
-                                            :
+                                            {{\App\CentralLogics\translate('reference')}} {{\App\CentralLogics\translate('code')}} :
                                             <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
                                                     data-target=".bd-example-modal-sm">
                                                 {{\App\CentralLogics\translate('add')}}
                                             </button>
                                         @else
-                                            {{\App\CentralLogics\translate('reference')}} {{\App\CentralLogics\translate('code')}}
-                                            : {{$order['transaction_reference']}}
+                                            {{\App\CentralLogics\translate('reference')}} {{\App\CentralLogics\translate('code')}} : {{$order['transaction_reference']}}
                                         @endif
                                     </h6>
-                                    <h6 class="text-capitalize"
-                                        style="color: #8a8a8a;">{{\App\CentralLogics\translate('order')}} {{\App\CentralLogics\translate('type')}}
+                                    <h6 class="text-capitalize" style="color: #8a8a8a;">{{\App\CentralLogics\translate('order')}} {{\App\CentralLogics\translate('type')}}
                                         : <label style="font-size: 10px"
                                                  class="badge badge-soft-primary">{{str_replace('_',' ',$order['order_type'])}}</label>
                                     </h6>
@@ -281,20 +270,18 @@
                                 <div class="media">
                                     <div class="avatar avatar-xl mr-3">
                                         <img class="img-fluid"
-                                             src="{{asset('storage/app/public/product')}}/{{$detail->product['image']}}"
                                              onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'"
+                                             src="{{asset('storage/app/public/product')}}/{{$detail->product['image']}}"
                                              alt="Image Description">
                                     </div>
 
                                     <div class="media-body">
                                         <div class="row">
-                                            <div class="col-md-4 mb-3 mb-md-0">
+                                            <div class="col-md-6 mb-3 mb-md-0">
                                                 <strong> {{$detail->product['name']}}</strong><br>
-                                                <strong><u>ملاحظة : </u> {{$detail['note']}}</strong><br>
 
                                                 @if(count(json_decode($detail['variation'],true))>0)
-                                                    <strong><u>{{\App\CentralLogics\translate('variation')}}
-                                                            : </u></strong>
+                                                    <strong><u>{{\App\CentralLogics\translate('variation')}} : </u></strong>
                                                     @foreach(json_decode($detail['variation'],true)[0] as $key1 =>$variation)
                                                         <div class="font-size-sm text-body">
                                                             <span>{{$key1}} :  </span>
@@ -305,8 +292,7 @@
 
                                                 @foreach(json_decode($detail['add_on_ids'],true) as $key2 =>$id)
                                                     @php($addon=\App\Model\AddOn::find($id))
-                                                    @if($key2==0)<strong><u>{{\App\CentralLogics\translate('addons')}}
-                                                            : </u></strong>@endif
+                                                    @if($key2==0)<strong><u>{{\App\CentralLogics\translate('addons')}} : </u></strong>@endif
 
                                                     @if($add_on_qtys==null)
                                                         @php($add_on_qty=1)
@@ -356,17 +342,11 @@
                         <div class="row justify-content-md-end mb-3">
                             <div class="col-md-9 col-lg-8">
                                 <dl class="row text-sm-right">
-                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('items')}} {{\App\CentralLogics\translate('price')}}
-                                        :
-                                    </dt>
+                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('items')}} {{\App\CentralLogics\translate('price')}}:</dt>
                                     <dd class="col-sm-6">{{$sub_total." ".\App\CentralLogics\Helpers::currency_symbol()}}</dd>
-                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('tax')}}
-                                        / {{\App\CentralLogics\translate('vat')}}:
-                                    </dt>
+                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('tax')}} / {{\App\CentralLogics\translate('vat')}}:</dt>
                                     <dd class="col-sm-6">{{$total_tax." ".\App\CentralLogics\Helpers::currency_symbol()}}</dd>
-                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('addon')}} {{\App\CentralLogics\translate('cost')}}
-                                        :
-                                    </dt>
+                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('addon')}} {{\App\CentralLogics\translate('cost')}}:</dt>
                                     <dd class="col-sm-6">
                                         {{$add_ons_cost." ".\App\CentralLogics\Helpers::currency_symbol()}}
                                         <hr>
@@ -375,14 +355,10 @@
                                     <dt class="col-sm-6">{{\App\CentralLogics\translate('subtotal')}}:</dt>
                                     <dd class="col-sm-6">
                                         {{$sub_total+$total_tax+$add_ons_cost." ".\App\CentralLogics\Helpers::currency_symbol()}}</dd>
-                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('coupon')}} {{\App\CentralLogics\translate('discount')}}
-                                        :
-                                    </dt>
+                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('coupon')}} {{\App\CentralLogics\translate('discount')}}:</dt>
                                     <dd class="col-sm-6">
                                         - {{$order['coupon_discount_amount']." ".\App\CentralLogics\Helpers::currency_symbol()}}</dd>
-                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('delivery')}} {{\App\CentralLogics\translate('fee')}}
-                                        :
-                                    </dt>
+                                    <dt class="col-sm-6">{{\App\CentralLogics\translate('delivery')}} {{\App\CentralLogics\translate('fee')}}:</dt>
                                     <dd class="col-sm-6">
                                         @if($order['order_type']=='take_away')
                                             @php($del_c=0)
@@ -417,21 +393,21 @@
 
                     <!-- Body -->
                     @if($order->customer)
-                        <div class="card-body ">
-                            <div class="media align-items-center row" href="javascript:">
-                                <div class="avatar-circle col-3">
+                        <div class="card-body">
+                            <div class="media align-items-center" href="javascript:">
+                                <div class="avatar avatar-circle mr-3">
                                     <img
                                         class="avatar-img" style="width: 75px"
                                         onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
                                         src="{{asset('storage/app/public/profile/'.$order->customer->image)}}"
                                         alt="Image Description">
                                 </div>
-                                <div class="media-body col-6">
-                                    <span
-                                        class="text-body text-hover-primary">{{$order->customer['f_name'].' '.$order->customer['l_name']}}</span>
+                                <div class="media-body">
+                                <span
+                                    class="text-body text-hover-primary">{{$order->customer['f_name'].' '.$order->customer['l_name']}}</span>
                                 </div>
-                                <div class="media-body text-right col-6">
-                                    <a class="link"  href="{{url('admin/sendMessageTo/'.$order->customer['id'].'?order='.$order->id)}}"> <i class="tio-messages nav-icon"> </i></a>
+                                <div class="media-body text-right">
+                                    {{--<i class="tio-chevron-right text-body"></i>--}}
                                 </div>
                             </div>
 
@@ -442,7 +418,7 @@
                                     <i class="tio-shopping-basket-outlined"></i>
                                 </div>
                                 <div class="media-body">
-                                    <span class="text-body text-hover-primary">{{\App\Model\Order::where('user_id',$order['user_id'])->count()}} orders</span>
+                                    <span class="text-body text-hover-primary">{{\App\Model\Order::where('user_id',$order['user_id'])->count()}} {{\App\CentralLogics\translate('orders')}}</span>
                                 </div>
                                 <div class="media-body text-right">
                                     {{--<i class="tio-chevron-right text-body"></i>--}}
@@ -470,10 +446,10 @@
                                 <hr>
                                 @php($address=\App\Model\CustomerAddress::find($order['delivery_address_id']))
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h5>{{\App\CentralLogics\translate('delivery')}} {{\App\CentralLogics\translate('address')}}</h5>
+                                    <h5>Delivery address</h5>
                                     @if(isset($address))
                                         <a class="link" data-toggle="modal" data-target="#shipping-address-modal"
-                                           href="javascript:">{{\App\CentralLogics\translate('edit')}}</a>
+                                           href="javascript:">Edit</a>
                                     @endif
                                 </div>
                                 @if(isset($address))
@@ -504,15 +480,14 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4"
-                        id="mySmallModalLabel">{{\App\CentralLogics\translate('reference')}} {{\App\CentralLogics\translate('code')}} {{\App\CentralLogics\translate('add')}}</h5>
+                    <h5 class="modal-title h4" id="mySmallModalLabel">{{\App\CentralLogics\translate('reference')}} {{\App\CentralLogics\translate('code')}} {{\App\CentralLogics\translate('add')}}</h5>
                     <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal"
                             aria-label="Close">
                         <i class="tio-clear tio-lg"></i>
                     </button>
                 </div>
 
-                <form action="{{route('admin.orders.add-payment-ref-code',[$order['id']])}}" method="post">
+                <form action="{{route('branch.orders.add-payment-ref-code',[$order['id']])}}" method="post">
                     @csrf
                     <div class="modal-body">
                         <!-- Input Group -->
@@ -564,7 +539,7 @@
 
                 @php($address=\App\Model\CustomerAddress::find($order['delivery_address_id']))
                 @if(isset($address))
-                    <form action="{{route('admin.orders.update-shipping',[$order['delivery_address_id']])}}"
+                    <form action="{{route('branch.order.update-shipping',[$order['delivery_address_id']])}}"
                           method="post">
                         @csrf
                         <div class="modal-body">
@@ -624,10 +599,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-white"
-                                    data-dismiss="modal">{{\App\CentralLogics\translate('close')}}</button>
-                            <button type="submit"
-                                    class="btn btn-primary">{{\App\CentralLogics\translate('save')}} {{\App\CentralLogics\translate('changes')}}</button>
+                            <button type="button" class="btn btn-white" data-dismiss="modal">{{\App\CentralLogics\translate('close')}}</button>
+                            <button type="submit" class="btn btn-primary">{{\App\CentralLogics\translate('save')}} {{\App\CentralLogics\translate('changes')}}</button>
                         </div>
                     </form>
                 @endif
@@ -642,20 +615,13 @@
         function addDeliveryMan(id) {
             $.ajax({
                 type: "GET",
-                url: '{{url('/')}}/admin/orders/add-delivery-man/{{$order['id']}}/' + id,
+                url: '{{url('/')}}/branch/orders/add-delivery-man/{{$order['id']}}/' + id,
                 data: $('#product_form').serialize(),
                 success: function (data) {
-                    if (data.status == true) {
-                        toastr.success('Delivery man successfully assigned/changed', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    } else {
-                        toastr.error('Deliveryman man can not assign/change in that status', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    }
+                    toastr.success('Successfully added', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
                 },
                 error: function () {
                     toastr.error('Add valid data', {
