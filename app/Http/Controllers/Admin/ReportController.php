@@ -70,6 +70,9 @@ class ReportController extends Controller
                 $newArr[json_decode($detail->product['category_ids'], true)[0]['id']][] = $detail;            
             }
         }
+        if(count($orders) == 0){
+            return back();
+        }
         return view('admin-views.report.printrecipt', compact('newArr','orders','from','to','orderTypeCount','productsCount','delivery_charge'));
         return $html;
     }
