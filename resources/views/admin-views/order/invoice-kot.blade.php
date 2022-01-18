@@ -131,7 +131,11 @@
         <div class="pt-1rem mb-1rem">
             <div style="display:inline-block;width: 55%;text-align: center;">
                 <label>{{$order->order_type}}</label><br>
+                @if($order->order_status == 'returned')
+                <label>مرتجعات  يومية</label>
+                @else
                 <label>مبيعات  يومية</label>
+                @endif
             </div>
             <div style="display:inline-block;width: 40%;">
                 <span style="border: 1px solid;border-radius: 5px;padding: 5px 8px;font-weight: bolder;">{{$order['id']}}</span>
