@@ -51,7 +51,7 @@ class ReportController extends Controller
         app()->setlocale('ar');
         $from = date('Y-m-d H:i:s', strtotime($request['from']));
         $to   = date('Y-m-d H:i:s', strtotime($request['to']));
-        $orders = Order::with('details')->where('order_status','returned')->orWhere('order_status','delivered')->where('payment_status','paid')->whereBetween('created_at', [$from,$to])->get();
+        $orders = Order::with('details')->where('order_status','returned')->orWhere('order_status','delivered')->whereBetween('created_at', [$from,$to])->get();
         $categories = Category::where('position', 0)->get();
         $newArr = [];
         $orderTypeCount = [];
