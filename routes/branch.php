@@ -29,7 +29,24 @@ Route::group(['namespace' => 'Branch', 'as' => 'branch.' ,'middleware'=>'lang'],
             Route::get('generate-sticker/{id}', 'OrderController@generate_sticker')->name('generate-sticker');            
             Route::post('add-payment-ref-code/{id}', 'OrderController@add_payment_ref_code')->name('add-payment-ref-code');
         });
+        Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
+            Route::get('add-new', 'ProductController@index')->name('add-new');
+            Route::post('variant-combination', 'ProductController@variant_combination')->name('variant-combination');
+            Route::post('store', 'ProductController@store')->name('store');
+            Route::get('edit/{id}', 'ProductController@edit')->name('edit');
+            Route::post('update/{id}', 'ProductController@update')->name('update');
+            Route::get('list', 'ProductController@list')->name('list');
+            Route::delete('delete/{id}', 'ProductController@delete')->name('delete');
+            Route::get('status/{id}/{status}', 'ProductController@status')->name('status');
+            Route::post('search', 'ProductController@search')->name('search');
+            Route::get('bulk-import', 'ProductController@bulk_import_index')->name('bulk-import');
+            Route::post('bulk-import', 'ProductController@bulk_import_data');
+            Route::get('bulk-export', 'ProductController@bulk_export_data')->name('bulk-export');
 
+            Route::get('view/{id}', 'ProductController@view')->name('view');
+            //ajax request
+            Route::get('get-categories', 'ProductController@get_categories')->name('get-categories');
+        });
         Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
             Route::get('list/{status}', 'OrderController@list')->name('list');
             Route::put('status-update/{id}', 'OrderController@status')->name('status-update');
