@@ -137,7 +137,6 @@ class OrderController extends Controller
             }
 
             $order=Order::where('id',$or_d->id)->first();
-            event(new ChangeStatusEvent($order))->dilay('5');
 
             return response()->json([
                 'message' => trans('custom.order_success'),
