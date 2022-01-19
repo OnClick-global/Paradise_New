@@ -72,6 +72,7 @@
                     </div>
 
                     <div class="mt-2">
+                        @if($order['order_status'] != 'returned')
                         <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
                            href={{route('admin.orders.generate-invoice',[$order['id']])}}>
                             <i class="tio-print mr-1"></i> {{\App\CentralLogics\translate('print invoice')}}
@@ -85,7 +86,16 @@
                            href={{route('admin.orders.generate-sticker',[$order['id']])}}>
                             <i class="tio-barcode mr-1"></i> طباعة استيكر
                         </a>
-
+                        @elseif($order['order_status'] == 'returned')
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
+                           href={{route('admin.orders.generate-invoice',[$order['id']])}}>
+                            <i class="tio-print mr-1"></i> طباعة مرتجع
+                        </a>
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
+                           href={{route('admin.orders.generate-kot',[$order['id']])}}>
+                            <i class="tio-print mr-1"></i> طباعة مطبخ مرتجع
+                        </a>                       
+                        @endif
                         <!-- Unfold -->
                         @if($order['order_type']!='take_away')
                             <div class="hs-unfold">

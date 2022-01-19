@@ -61,11 +61,6 @@
 	@if($detail->product)
         <div class="ticket">
             <div style="width:100%;text-align:center;">
-                <b>  {{$detail->product['name']}} </b>
-                <?php
-                    echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG((string)$detail->product['id'], 'C128') . '" alt="barcode" width="75%"  />';
-                ?>
-
                 <table class="table" style="display: inline;">
                     <thead>
                     <tr>
@@ -75,9 +70,9 @@
                     <tbody>
                     </tbody>
                 </table>
+                <b>  {{$detail->product['name']}} </b>
             </div>
         </div>
-        <hr>
 	@endif
 @endforeach    	
         <script type="text/javascript">

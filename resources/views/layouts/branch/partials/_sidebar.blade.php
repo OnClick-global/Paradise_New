@@ -176,6 +176,25 @@
                         </li>
                         <!-- End Pages -->
 
+                        <!-- Pages -->
+                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/product*')?'active':''}}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
+                            >
+                                <i class="tio-premium-outlined nav-icon"></i>
+                                <span
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CentralLogics\translate('product')}}</span>
+                            </a>
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                style="display: {{Request::is('branch/product*')?'block':'none'}}">
+                                <li class="nav-item {{Request::is('branch/product/list')?'active':''}}">
+                                    <a class="nav-link " href="{{route('branch.product.list')}}" title="product list">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{\App\CentralLogics\translate('list')}}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- End Pages -->
                     </ul>
                 </div>
                 <!-- End Content -->

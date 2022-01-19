@@ -73,10 +73,30 @@
                     </div>
 
                     <div class="mt-2">
-                        <a class="text-body mr-3"
+                        @if($order['order_status'] != 'returned')
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
                            href={{route('branch.orders.generate-invoice',[$order['id']])}}>
-                            <i class="tio-print mr-1"></i> {{\App\CentralLogics\translate('print')}} {{\App\CentralLogics\translate('invoice')}}
+                            <i class="tio-print mr-1"></i> {{\App\CentralLogics\translate('print invoice')}}
                         </a>
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
+                           href={{route('branch.orders.generate-kot',[$order['id']])}}>
+                            <i class="tio-print mr-1"></i> طباعة مطبخ
+                        </a>
+
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
+                           href={{route('branch.orders.generate-sticker',[$order['id']])}}>
+                            <i class="tio-barcode mr-1"></i> طباعة استيكر
+                        </a>
+                        @elseif($order['order_status'] == 'returned')
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
+                           href={{route('branch.orders.generate-invoice',[$order['id']])}}>
+                            <i class="tio-print mr-1"></i> طباعة مرتجع
+                        </a>
+                        <a class="text-body mr-3 btn btn-outline-secondary btn-sm" target="_blank" 
+                           href={{route('branch.orders.generate-kot',[$order['id']])}}>
+                            <i class="tio-print mr-1"></i> طباعة مطبخ مرتجع
+                        </a>                       
+                        @endif
 
                         <!-- Unfold -->
                         @if($order['order_type']!='take_away')
@@ -152,9 +172,6 @@
                                     <a class="dropdown-item"
                                        onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'failed'])}}','Change status to failed ?')"
                                        href="javascript:">{{\App\CentralLogics\translate('failed')}}</a>
-                                    <a class="dropdown-item"
-                                       onclick="route_alert('{{route('branch.orders.status',['id'=>$order['id'],'order_status'=>'canceled'])}}','Change status to canceled ?')"
-                                       href="javascript:">{{\App\CentralLogics\translate('canceled')}}</a>
                                 </div>
                             </div>
                         </div>

@@ -51,16 +51,21 @@ class ReportController extends Controller
         app()->setlocale('ar');
         $from = date('Y-m-d H:i:s', strtotime($request['from']));
         $to   = date('Y-m-d H:i:s', strtotime($request['to']));
-        $orders = Order::with('details')->where(['order_status'=>'delivered','payment_status'=>'paid'])->whereBetween('created_at', [$from,$to])->get();
+        $orders = Order::with('details')->whereIn('order_status',['returned','delivered'])->whereBetween('created_at', [$from,$to])->get();
         $categories = Category::where('position', 0)->get();
         $newArr = [];
         $orderTypeCount = [];
+        $orderStatusCount = [];
         $orderTypeCount['delivery'] = [];
         $orderTypeCount['take_away'] = [];
+        $orderStatusCount['returned'] = [];
         $productsCount   = 0;
         $delivery_charge = 0;
         foreach ($orders as $order) {
             $delivery_charge += $order->delivery_charge;
+            if ($order->order_status == 'returned') {
+                $orderStatusCount['returned'][] = $order->order_amount;
+            }
             // dd($order);
             $orderTypeCount[$order->order_type][] = $order->order_amount;
             $orderTypeCount['coupon_discount_amount'][] = $order->coupon_discount_amount;
@@ -70,7 +75,10 @@ class ReportController extends Controller
                 $newArr[json_decode($detail->product['category_ids'], true)[0]['id']][] = $detail;            
             }
         }
-        return view('admin-views.report.printrecipt', compact('newArr','orders','from','to','orderTypeCount','productsCount','delivery_charge'));
+        if(count($orders) == 0){
+            return back();
+        }
+        return view('admin-views.report.printrecipt', compact('newArr','orders','from','to','orderTypeCount','orderStatusCount','productsCount','delivery_charge'));
         return $html;
     }
 
