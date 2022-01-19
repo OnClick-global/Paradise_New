@@ -78,6 +78,24 @@ class BusinessSettingsController extends Controller
             'value' => $request['phone_verification']
         ]);
 
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'acceptedTime'], [
+            'value' => $request['acceptedTime']
+        ]);
+
+
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'deliveryTime'], [
+            'value' => $request['deliveryTime']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'cockingTime'], [
+            'value' => $request['cockingTime']
+        ]);
+
+
+
+
         DB::table('business_settings')->updateOrInsert(['key' => 'email_verification'], [
             'value' => $request['email_verification']
         ]);

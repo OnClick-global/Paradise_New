@@ -1,5 +1,4 @@
 @extends('layouts.admin.app')
-
 @section('title',\App\CentralLogics\translate('settings'))
 
 @push('css_or_js')
@@ -824,87 +823,55 @@
                             </div>
                         </div>
 
+
+
+
                         <div class="row">
-                            @php($phone=\App\Model\BusinessSetting::where('key','phone')->first()->value)
+
+                            @php($acceptedTime=\App\Model\BusinessSetting::where('key','acceptedTime')->first()->value)
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('phone')}}</label>
-                                    <input type="text" value="{{$phone}}"
-                                           name="phone" class="form-control"
+                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('Accepted Time')}}</label>
+                                    <input type="number" value="{{$acceptedTime}}"
+                                           name="acceptedTime" class="form-control"
                                            placeholder="" required>
                                 </div>
                             </div>
-                            @php($email=\App\Model\BusinessSetting::where('key','email_address')->first()->value)
+
+
+                            @php($cockingTime=\App\Model\BusinessSetting::where('key','cockingTime')->first()->value)
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('email')}}</label>
-                                    <input type="email" value="{{$email}}"
-                                           name="email" class="form-control" placeholder=""
-                                           required>
-                                </div>
-                            </div>
-                            @php($address=\App\Model\BusinessSetting::where('key','address')->first()->value)
-                            <div class="col-md-4 col-12">
-                                <div class="form-group">
-                                    <label class="input-label"
-                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('address')}}</label>
-                                    <input type="text" value="{{$address}}"
-                                           name="address" class="form-control" placeholder=""
-                                           required>
+                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('Cocking Time')}}</label>
+                                    <input type="number" value="{{$cockingTime}}"
+                                           name="cockingTime" class="form-control"
+                                           placeholder="" required>
                                 </div>
                             </div>
 
-                            @php($mov=\App\Model\BusinessSetting::where('key','minimum_order_value')->first()->value)
+
+
+                            @php($deliveryTime=\App\Model\BusinessSetting::where('key','deliveryTime')->first()->value)
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('min order value')}}
-                                        ( {{\App\CentralLogics\Helpers::currency_symbol()}} )</label>
-                                    <input type="number" min="1" value="{{$mov}}"
-                                           name="minimum_order_value" class="form-control" placeholder=""
-                                           required>
-                                </div>
-                            </div>
-                            @php($value=\App\Model\BusinessSetting::where('key','point_per_currency')->first()->value)
-                            <div class="col-md-4 col-12">
-                                <div class="form-group">
-                                    <label class="input-label" for="exampleFormControlInput1"> <strong>1
-                                            ( {{\App\CentralLogics\Helpers::currency_symbol()}} )
-                                            = {{$value}} {{\App\CentralLogics\translate('internal points')}}</strong>
-                                    </label>
-                                    <input type="number" min="1" value="{{$value}}"
-                                           name="point_per_currency" class="form-control" placeholder=""
-                                           required>
+                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('delivery Time')}}</label>
+                                    <input type="number" value="{{$deliveryTime}}"
+                                           name="deliveryTime" class="form-control"
+                                           placeholder="" required>
                                 </div>
                             </div>
 
-                            @php($pagination_limit=\App\Model\BusinessSetting::where('key','pagination_limit')->first()->value)
-                            <div class="col-md-4 col-12">
-                                <div class="form-group">
-                                    <label class="input-label"
-                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('pagination settings')}}</label>
-                                    <input type="text" value="{{$pagination_limit}}"
-                                           name="pagination_limit" class="form-control" placeholder=""
-                                           required>
-                                </div>
-                            </div>
 
-                            @php($footer_text=\App\Model\BusinessSetting::where('key','footer_text')->first()->value)
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="input-label"
-                                           for="exampleFormControlInput1">{{\App\CentralLogics\translate('footer text')}}</label>
-                                    <input type="text" value="{{$footer_text}}"
-                                           name="footer_text" class="form-control" placeholder=""
-                                           required>
-                                </div>
-                            </div>
+
+
+
+
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-4 col-12">
+                        <div class="row">                            <div class="col-md-4 col-12">
                                 @php($pv=\App\CentralLogics\Helpers::get_business_settings('phone_verification'))
                                 <div class="form-group">
                                     <label>{{\App\CentralLogics\translate('phone verification')}} ( OTP
@@ -936,6 +903,39 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-4 col-12">
+                                    @php($pv=\App\CentralLogics\Helpers::get_business_settings('phone_verification'))
+                                    <div class="form-group">
+                                        <label>{{\App\CentralLogics\translate('phone verification')}} ( OTP
+                                            )</label><small style="color: red">*</small>
+                                        <div class="input-group input-group-md-down-break">
+                                            <!-- Custom Radio -->
+                                            <div class="form-control">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" class="custom-control-input" value="1"
+                                                           name="phone_verification"
+                                                           id="phone_verification_on" {{(isset($pv) && $pv==1)?'checked':''}}>
+                                                    <label class="custom-control-label"
+                                                           for="phone_verification_on">{{\App\CentralLogics\translate('on')}}</label>
+                                                </div>
+                                            </div>
+                                            <!-- End Custom Radio -->
+
+                                            <!-- Custom Radio -->
+                                            <div class="form-control">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" class="custom-control-input" value="0"
+                                                           name="phone_verification"
+                                                           id="phone_verification_off" {{(isset($pv) && $pv==0)?'checked':''}}>
+                                                    <label class="custom-control-label"
+                                                           for="phone_verification_off">{{\App\CentralLogics\translate('off')}}</label>
+                                                </div>
+                                            </div>
+                                            <!-- End Custom Radio -->
+                                        </div>
+                                    </div>
+                                </div>
                             <div class="col-md-4 col-12">
                                 @php($sp=\App\CentralLogics\Helpers::get_business_settings('self_pickup'))
                                 <div class="form-group">

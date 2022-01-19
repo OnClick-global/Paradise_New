@@ -39,7 +39,8 @@ class Pending extends Command
      */
     public function handle()
     {
-        $order= Order::where('order_status','pending')->where('created_at', '<=', Carbon::now()->subMinute(1))->update([
+        $acceptedTime=\App\Model\BusinessSetting::where('key','acceptedTime')->first()->value;
+        $order= Order::where('order_status','pending')->where('created_at', '<=', Carbon::now()->subMinute($acceptedTime))->update([
             'order_status'=>'confirmed'
         ]);
     }

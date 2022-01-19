@@ -39,7 +39,8 @@ class Processing extends Command
      */
     public function handle()
     {
-        $order= Order::where('order_status','confirmed')->where('updated_at','<=', Carbon::now()->subMinute(1))->update([
+        $cockingTime=\App\Model\BusinessSetting::where('key','cockingTime')->first()->value;
+        $order= Order::where('order_status','confirmed')->where('updated_at','<=', Carbon::now()->subMinute($cockingTime))->update([
             'order_status'=>'processing'
         ]);
     }

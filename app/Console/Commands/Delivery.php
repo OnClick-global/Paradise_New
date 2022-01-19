@@ -39,7 +39,8 @@ class Delivery extends Command
      */
     public function handle()
     {
-        $order= Order::where('order_status','processing')->where('updated_at', '<=', Carbon::now()->subMinute(1))->update([
+        $deliveryTime=\App\Model\BusinessSetting::where('key','deliveryTime')->first()->value;
+        $order= Order::where('order_status','processing')->where('updated_at', '<=', Carbon::now()->subMinute($deliveryTime))->update([
             'order_status'=>'out_for_delivery'
         ]);
     }
