@@ -122,7 +122,7 @@ class OrderController extends Controller
 
             $fcm_token = $request->user()->cm_firebase_token;
             $value = Helpers::order_status_update_message('pending');
-          
+
                 if ($value) {
                     $data = [
                         'title' => 'Order',
@@ -132,10 +132,7 @@ class OrderController extends Controller
                     ];
                     Helpers::send_push_notif_to_device($fcm_token, $data);
                 }
-
-
-            $order=Order::where('id',$or_d->id)->first();
-
+//            $order=Order::where('id',$or_d->id)->first();
             return response()->json([
                 'message' => trans('custom.order_success'),
                 'order_id' => $o_id
