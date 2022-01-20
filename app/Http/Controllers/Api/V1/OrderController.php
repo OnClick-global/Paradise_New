@@ -67,7 +67,7 @@ class OrderController extends Controller
             $del_time = $request['delivery_time'];
         }
 
-        try {
+
             $or = [
                 'id' => 100000 + Order::all()->count() + 1,
                 'user_id' => $request->user()->id,
@@ -122,7 +122,7 @@ class OrderController extends Controller
 
             $fcm_token = $request->user()->cm_firebase_token;
             $value = Helpers::order_status_update_message('pending');
-            try {
+          
                 if ($value) {
                     $data = [
                         'title' => 'Order',
@@ -132,9 +132,7 @@ class OrderController extends Controller
                     ];
                     Helpers::send_push_notif_to_device($fcm_token, $data);
                 }
-            } catch (\Exception $e) {
 
-            }
 
             $order=Order::where('id',$or_d->id)->first();
 
@@ -143,10 +141,6 @@ class OrderController extends Controller
                 'order_id' => $o_id
             ], 200);
 
-            /*Mail::to($email)->send(new \App\Mail\OrderPlaced($o_id));*/
-        } catch (\Exception $e) {
-            return response()->json([$e], 403);
-        }
     }
 
     public function get_order_list(Request $request)
