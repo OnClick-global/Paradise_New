@@ -40,7 +40,6 @@ class PayMobController extends Controller
             $paymobOrder = $paymobOrders->id;
         }
         $order->update(['paymob_id' => $paymobOrder]); // save paymob order id for later usage.
-        dd($order);
         $payment_key = PayMob::getPaymentKeyPaymob( // get payment key
             $integration_id,
             $auth->token,
@@ -55,6 +54,7 @@ class PayMobController extends Controller
             'zagazig', // optional
             'egypt' // optional
         );
+        dd($payment_key);
         if ($iframe_id == 'wallet') {
             $data = [
                 "source"        => ["identifier"=> $phone, "subtype"=>"WALLET"],
