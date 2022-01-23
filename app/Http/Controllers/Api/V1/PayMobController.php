@@ -54,7 +54,7 @@ class PayMobController extends Controller
             'zagazig', // optional
             'egypt' // optional
         );
-        dd($payment_key);
+        // dd($payment_key);
         if ($iframe_id == 'wallet') {
             $data = [
                 "source"        => ["identifier"=> $phone, "subtype"=>"WALLET"],
