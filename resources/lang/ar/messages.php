@@ -392,7 +392,7 @@
   'joined_at' => 'Joined at',
   'current' => 'Current',
   'addresses' => 'Addresses',
-  'delivery Time' => 'وقت التوصيل الاوتوماتيكي',
-  'Accepted Time' =>'وقت الموافقه الاوتوماتيكي',
-  'Cocking Time' => 'وقت الطبخ الاوتوماتيكي',
+  'delivery Time' => 'وقت التوصيل التلقائي',
+  'Accepted Time' =>'وقت الموافقه التلقائي',
+  'Cocking Time' => 'وقت الطبخ التلقائي',
 );
