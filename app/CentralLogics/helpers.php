@@ -129,7 +129,7 @@ class Helpers
             $openTime  = date('Y-m-d H:i:s',strtotime($data['available_time_starts'].'-1 day'));
             $closeTime = date('Y-m-d H:i:s',strtotime($data['available_time_ends'].'+1 day'));              
             $variations = [];
-                $item['is_open'] = Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s')) && ($item['status'] == 1)?true:false;
+            $data['is_open'] = Helpers::isBetween($openTime,$closeTime,date('Y-m-d H:i:s')) && ($data['status'] == 1)?true:false;
             $data['category_ids'] = json_decode($data['category_ids']);
             $data['attributes'] = json_decode($data['attributes']);
             $data['choice_options'] = json_decode($data['choice_options']);
