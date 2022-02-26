@@ -62,6 +62,7 @@ class SMS_module
                 echo 'Error:' . curl_error($ch);
             }
             curl_close ($ch);
+            dd($result);
 $response = 'success';
 return $response;
 
