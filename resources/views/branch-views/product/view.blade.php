@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+@extends('layouts.branch.app')
 
 @section('title','Product Preview')
 
