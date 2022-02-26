@@ -43,22 +43,28 @@ class SMS_module
         $config = self::get_settings('twilio_sms');
         $response = 'error';
         if (isset($config) && $config['status'] == 1) {
-            $message = str_replace("#OTP#", $otp, $config['otp_template']);
-            $sid = $config['sid'];
-            $token = $config['token'];
-            try {
-                $twilio = new Client($sid, $token);
-                $twilio->messages
-                    ->create($receiver, // to
-                        array(
-                            "messagingServiceSid" => $config['messaging_service_sid'],
-                            "body" => $message
-                        )
-                    );
-                $response = 'success';
-            } catch (\Exception $exception) {
-                $response = 'error';
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://smssmartegypt.com/sms/api/otp-send');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"mohammad.elshehri@gmail.com\",\"password\":\"123456789\",\"sender\":\"Paradise\",\"mobile\":\"201066663850\",\"lang\":[en/ar]}");
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            $headers = array();
+            $headers[] = 'Content-Type: application/json';
+            $headers[] = 'Accept: application/json';
+            $headers[] = 'Accept-Language: en-US';
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $result = curl_exec($ch);
+            if (curl_errno($ch)) {
+                echo 'Error:' . curl_error($ch);
             }
+            curl_close ($ch);
+$response = 'success';
+return $response;
+
         }
         return $response;
     }
