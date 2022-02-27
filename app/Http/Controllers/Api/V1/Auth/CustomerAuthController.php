@@ -118,8 +118,8 @@ class CustomerAuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        dd($request->all());
         $verify = PhoneVerification::where(['phone' => $request['phone'], 'token' => $request['token']])->first();
+        dd($request->all());
 
         if (isset($verify)) {
             $verify->delete();
