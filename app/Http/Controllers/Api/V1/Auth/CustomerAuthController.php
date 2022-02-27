@@ -112,14 +112,13 @@ class CustomerAuthController extends Controller
 
     public function verify_phone(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'phone' => 'required'
         ]);
-
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-
         $verify = PhoneVerification::where(['phone' => $request['phone'], 'token' => $request['token']])->first();
 
         if (isset($verify)) {
