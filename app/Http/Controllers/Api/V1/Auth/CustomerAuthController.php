@@ -32,16 +32,20 @@ class CustomerAuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-
+        if(starts_with($request['phone'],'+')){
+            $phone = $request['phone'];
+        }else{
+            $phone = '+'.$request['phone'];
+        }
         if (BusinessSetting::where(['key' => 'phone_verification'])->first()->value) {
             $token = rand(1000, 9999);
             DB::table('phone_verifications')->insert([
-                'phone' => $request['phone'],
+                'phone' => $phone,
                 'token' => $token,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-            $response = SMS_module::send($request['phone'], $token);
+            $response = SMS_module::send($phone, $token);
             return response()->json([
                 'message' => $response,
                 'token' => 'active'
