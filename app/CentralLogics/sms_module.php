@@ -48,7 +48,7 @@ class SMS_module
 
             curl_setopt($ch, CURLOPT_URL, 'https://smssmartegypt.com/sms/api/otp-send');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"She7ri\",\"password\":\"123456789\",\"sender\":\"Paradise\",\"mobile\":\"+201066663850\",\"lang\":[en/ar]}");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"Paradise\",\"password\":\"123456789\",\"sender\":\"Paradise\",\"mobile\":\"+201066663850\",\"lang\":[en/ar]}");
             curl_setopt($ch, CURLOPT_POST, 1);
 
             $headers = array();
