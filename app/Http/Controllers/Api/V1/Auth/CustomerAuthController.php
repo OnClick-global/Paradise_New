@@ -119,8 +119,6 @@ class CustomerAuthController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         $verify = PhoneVerification::where(['phone' => $request['phone'], 'token' => $request['token']])->first();
-        dd($verify);
-
         if (isset($verify)) {
             $verify->delete();
             return response()->json([
