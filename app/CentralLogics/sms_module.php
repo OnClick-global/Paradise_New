@@ -43,29 +43,26 @@ class SMS_module
         $config = self::get_settings('twilio_sms');
         $response = 'error';
         if (isset($config) && $config['status'] == 1) {
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, 'https://smssmartegypt.com/sms/api/otp-send');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"Paradise\",\"password\":\"123456789\",\"sender\":\"Paradise\",\"mobile\":\"+201066663850\",\"lang\":[en/ar]}");
-            curl_setopt($ch, CURLOPT_POST, 1);
-
-            $headers = array();
-            $headers[] = 'Content-Type: application/json';
-            $headers[] = 'Accept: application/json';
-            $headers[] = 'Accept-Language: en-US';
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                echo 'Error:' . curl_error($ch);
+            $message = str_replace("#OTP#", $otp, $config['otp_template']);
+            $sid = $config['sid'];
+            $token = $config['token'];
+            try {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://smssmartegypt.com/sms/api/otp-send');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"mohammad.elshehri@gmail.com\",\"password\":\"123456789\",\"sendername\":\"Paradise\",\"mobiles\":\"201066663850\",\"message\":\"  \"}");
+                curl_setopt($ch, CURLOPT_POST, 1);
+                $headers = array();
+                $headers[] = 'Content-Type: application/json';
+                $headers[] = 'Accept: application/json';
+                $headers[] = 'Accept-Language: en-US';
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                $result = curl_exec($ch);
+                curl_close ($ch);
+                $response = 'success';
+            } catch (\Exception $exception) {
+                $response = 'error';
             }
-            curl_close ($ch);
-            dd($result);
-$response = 'success';
-return $response;
-
         }
         return $response;
     }
