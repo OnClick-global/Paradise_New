@@ -32,7 +32,7 @@ class CustomerAuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        if(starts_with($request['phone'],'+')){
+        if(Str::startsWith($request['phone'],'+')){
             $phone = $request['phone'];
         }else{
             $phone = '+'.$request['phone'];
