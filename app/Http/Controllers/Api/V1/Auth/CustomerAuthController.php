@@ -33,19 +33,24 @@ class CustomerAuthController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         if(Str::startsWith($request['phone'],'+')){
-            $phone = $request['phone'];
+            $phonewithPlus = $request['phone'];
         }else{
-            $phone = '+'.$request['phone'];
+            $phonewithPlus = '+'.$request['phone'];
+        }
+        if(!Str::startsWith($request['phone'],'+')){
+            $phonewithOutPlus = $request['phone'];
+        }else{
+            $phonewithOutPlus = str_replace('+', '', $request['phone']);
         }
         if (BusinessSetting::where(['key' => 'phone_verification'])->first()->value) {
             $token = rand(1000, 9999);
             DB::table('phone_verifications')->insert([
-                'phone' => $phone,
+                'phone' => $phonewithPlus,
                 'token' => $token,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-            $response = SMS_module::send($phone, $token);
+            $response = SMS_module::send($phonewithOutPlus, $token);
             return response()->json([
                 'message' => $response,
                 'token' => 'active'
