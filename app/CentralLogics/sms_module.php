@@ -48,9 +48,9 @@ class SMS_module
             $token = $config['token'];
             try {
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, 'https://smssmartegypt.com/sms/api/otp-send');
+                curl_setopt($ch, CURLOPT_URL, 'https://smssmartegypt.com/sms/api/json/');
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"mohammad.elshehri@gmail.com\",\"password\":\"123456789\",\"sendername\":\"Paradise\",\"mobiles\":\"201066663850\",\"message\":\" $message \"}");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"username\":\"mohammad.elshehri@gmail.com\",\"password\":\"123456789\",\"sendername\":\"Paradise\",\"mobiles\":\"201066663850\",\"message\":\"$message\"}");
                 curl_setopt($ch, CURLOPT_POST, 1);
                 $headers = array();
                 $headers[] = 'Content-Type: application/json';
