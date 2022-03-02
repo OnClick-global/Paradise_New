@@ -25,32 +25,30 @@ class CustomerAuthController extends Controller
 
     public function check_phone(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $data = $request->all();
+        if (Str::startsWith($data['phone'],'+200')) {
+            $data['phone'] = '2'.substr($data['phone'],3);
+        }elseif(Str::startsWith($data['phone'],'200')){
+            $data['phone'] = '2'.substr($data['phone'],2);
+        } elseif(Str::startsWith($data['phone'],'+20')){
+            $data['phone'] = substr($data['phone'],1);
+        }       
+        $validator = Validator::make($data, [
             'phone' => 'required|min:11|max:14|unique:users'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        if(Str::startsWith($request['phone'],'+')){
-            $phonewithPlus = $request['phone'];
-        }else{
-            $phonewithPlus = '+'.$request['phone'];
-        }
-        if(!Str::startsWith($request['phone'],'+')){
-            $phonewithOutPlus = $request['phone'];
-        }else{
-            $phonewithOutPlus = str_replace('+', '', $request['phone']);
-        }
         if (BusinessSetting::where(['key' => 'phone_verification'])->first()->value) {
             $token = rand(1000, 9999);
             DB::table('phone_verifications')->insert([
-                'phone' => $phonewithPlus,
+                'phone' => $data['phone'],
                 'token' => $token,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-            $response = SMS_module::send($phonewithOutPlus, $token);
+            $response = SMS_module::send($data['phone'], $token);
             return response()->json([
                 'message' => $response,
                 'token' => 'active'
@@ -121,15 +119,22 @@ class CustomerAuthController extends Controller
 
     public function verify_phone(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $data = $request->all();
+        if (Str::startsWith($data['phone'],'+200')) {
+            $data['phone'] = '2'.substr($data['phone'],3);
+        }elseif(Str::startsWith($data['phone'],'200')){
+            $data['phone'] = '2'.substr($data['phone'],2);
+        } elseif(Str::startsWith($data['phone'],'+20')){
+            $data['phone'] = substr($data['phone'],1);
+        }         
+        $validator = Validator::make($data, [
             'phone' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $verify = PhoneVerification::where(['phone' => $request['phone'], 'token' => $request['token']])->first();
+        $verify = PhoneVerification::where(['phone' => $data['phone'], 'token' => $request['token']])->first();
         if (isset($verify)) {
-            $verify->delete();
             return response()->json([
                 'message' => 'OTP verified!',
             ], 200);
@@ -170,10 +175,12 @@ class CustomerAuthController extends Controller
         $phone_verification = Helpers::get_business_settings('phone_verification');
         $email_verification = Helpers::get_business_settings('email_verification');
         if ($phone_verification && !$user->is_phone_verified) {
-            return response()->json(['temporary_token' => $temporary_token], 200);
+            $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
+            return response()->json(['token' => $token], 200);
         }
         if ($email_verification && !$user->is_email_verified) {
-            return response()->json(['temporary_token' => $temporary_token], 200);
+            $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
+            return response()->json(['token' => $token], 200);
         }
 
         $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
